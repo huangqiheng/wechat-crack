@@ -94,7 +94,8 @@ fi
 cd $mxe_path
 #make gcc MXE_TARGETS='x86_64-w64-mingw32.static i686-w64-mingw32.static'
 #http://mxe.cc/build-matrix.html
-make gcc libwebsockets json-c curl protobuf
+make gcc libwebsockets json-c curl protobuf MXE_TARGETS='i686-w64-mingw32.static'
+
 
 #set mxe Envirorment Variables
 bashrc=$HOME/.bashrc

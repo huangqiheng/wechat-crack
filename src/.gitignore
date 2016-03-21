@@ -45,6 +45,8 @@ autoscan-*.log
 aclocal.m4
 compile
 config.h.in
+config.log  
+config.status
 configure
 configure.scan
 depcomp
