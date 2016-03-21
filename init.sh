@@ -5,6 +5,8 @@ full_package_name=daemon
 version=0.1
 bug_report_address=and@hqh.me
 share_name=share
+mxe_path=/opt/mxe
+i686_prefix=$mxe_path/usr/i686-w64-mingw32.static
 script_path=`dirname $(readlink -f $0)`
 
 #configure mode
@@ -23,6 +25,8 @@ if [ "$1" = "conf" ]; then
 	autoconf
 	autoheader
 	automake --add-missing
+	#./configure --libdir $(i686_prefix)/lib --exec-prefix $(i686_prefix) --host=i686-w64-mingw32.static
+	#./configure --exec-prefix $i686_prefix --host=i686-w64-mingw32.static
 	./configure --host=i686-w64-mingw32.static
 	exit
 fi
@@ -32,8 +36,9 @@ echo "#------------------------------------------------------#"
 echo "#////////////////// enter make mode ///////////////////#"
 if [ "$1" = "make" ]; then
 	cd $script_path/src
+	autoconf
+	automake --add-missing
 	make clean
-	cflags=`curl-config --cflgs`
 	./configure --host=i686-w64-mingw32.static
 	make
 	mv daemon.exe ../bin
@@ -84,8 +89,6 @@ echo "#////////////// Download Install MXE  /////////////////#"
 echo "#------------------------------------------------------#"
 #http://mxe.cc/#usage
 
-mxe_path=/opt/mxe
-
 if [ ! -d $mxe_path ]; then
 	cd /opt
 	git clone https://github.com/mxe/mxe.git
@@ -101,7 +104,7 @@ make gcc libwebsockets json-c curl protobuf MXE_TARGETS='i686-w64-mingw32.static
 bashrc=$HOME/.bashrc
 mxe_bin=$mxe_path/usr/bin
 pkcfg=$mxe_path/usr/i686-w64-mingw32.static/lib/pkgconfig
-i686_bin=$mxe_path/usr/i686-w64-mingw32.static/bin
+i686_bin=$i686_prefix/bin
 
 if ! grep -q "$mxe_bin" $bashrc
 then

@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <locale.h>
 #include <curl/curl.h>
+#include <debugapi.h>
+
  
 int main(void)
 {
   CURL *curl;
   CURLcode res;
+
+  OutputDebugStringA("hallo.....opened.");
  
   curl_global_init(CURL_GLOBAL_DEFAULT);
  
   curl = curl_easy_init();
   if(curl) {
-    curl_easy_setopt(curl, CURLOPT_URL, "https://example.com/");
+    curl_easy_setopt(curl, CURLOPT_URL, "http://www.163.com/");
  
 #ifdef SKIP_PEER_VERIFICATION
     /*
