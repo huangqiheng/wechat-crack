@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 #configure parameters
 full_package_name=daemon
 version=0.1
@@ -76,12 +77,19 @@ echo "#/////////////// mount output directory ///////////////#"
 echo "#------------------------------------------------------#"
 
 share_out=$proj_path/bin
+apt-get install smartmontools
 
-apt-get install -y virtualbox-guest-dkms
+is_vmware=$(smartctl --all /dev/sda1 | grep -i vmware 2>&1)
 
-if [ ! -d $share_out ]; then
-	mkdir -p $share_out
-	mount -t vboxsf $share_name $share_out
+if [ $is_vmware ]; then
+	echo "vmware"
+else 
+	apt-get install -y virtualbox-guest-dkms
+
+	if [ ! -d $share_out ]; then
+		mkdir -p $share_out
+		mount -t vboxsf $share_name $share_out
+	fi
 fi
 
 echo "#------------------------------------------------------#"
