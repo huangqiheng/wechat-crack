@@ -2,47 +2,26 @@
 
 
 #configure parameters
-full_package_name=daemon
-version=0.1
-bug_report_address=and@hqh.me
 share_name=share
 mxe_path=/opt/mxe
 i686_prefix=$mxe_path/usr/i686-w64-mingw32.static
 script_path=`dirname $(readlink -f $0)`
 
-#configure mode
-echo "#------------------------------------------------------#"
-echo "#////////////// enter generate conf mode //////////////#"
-if [ "$1" = "conf" ]; then
-	cd $script_path/src
-	autoscan
-	mv configure.scan configure.ac
-	sed -i "s|FULL-PACKAGE-NAME|$full_package_name|g" configure.ac
-	sed -i "s|VERSION|$version|g" configure.ac
-	sed -i "s|BUG-REPORT-ADDRESS|$bug_report_address|g" configure.ac
-	sed -i "s|AC_CONFIG_HEADERS|AM_INIT_AUTOMAKE\nAC_CONFIG_HEADERS|g" configure.ac
-
-	aclocal
-	autoconf
-	autoheader
-	automake --add-missing
-	#./configure --libdir $(i686_prefix)/lib --exec-prefix $(i686_prefix) --host=i686-w64-mingw32.static
-	#./configure --exec-prefix $i686_prefix --host=i686-w64-mingw32.static
-	./configure --host=i686-w64-mingw32.static
-	exit
-fi
 
 #make mode
 echo "#------------------------------------------------------#"
 echo "#////////////////// enter make mode ///////////////////#"
 if [ "$1" = "make" ]; then
-	cd $script_path/src
+	cd $script_path
+	aclocal
 	autoconf
 	automake --add-missing
 	make clean
 	./configure --host=i686-w64-mingw32.static
+	#./configure --libdir $(i686_prefix)/lib --exec-prefix $(i686_prefix) --host=i686-w64-mingw32.static
+	#./configure --exec-prefix $i686_prefix --host=i686-w64-mingw32.static
 	make
-	mv daemon.exe ../bin
+	#mv daemon.exe ../bin
 	exit
 fi
 
@@ -86,10 +65,8 @@ if [ $is_vmware ]; then
 else 
 	apt-get install -y virtualbox-guest-dkms
 
-	if [ ! -d $share_out ]; then
-		mkdir -p $share_out
-		mount -t vboxsf $share_name $share_out
-	fi
+	mkdir -p $share_out
+	mount -t vboxsf $share_name $share_out
 fi
 
 echo "#------------------------------------------------------#"
